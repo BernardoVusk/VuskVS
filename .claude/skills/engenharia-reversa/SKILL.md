@@ -2,7 +2,7 @@
 name: engenharia-reversa
 description: >
   Engenharia reversa de produto com evidência: estuda um SaaS/app só pelo lado
-  de fora, em 8 etapas (preparo, escolha, coleta por navegação com Playwright,
+  de fora, em 8 etapas (preparo, escolha, coleta por navegação com agent-browser,
   funções, interface, acesso, mapa consolidado e reconstrução), cada uma salvando
   um .md validado, e termina num blueprint próprio construído em Next.js +
   Supabase com gate de 12 invariantes de segurança. Marca tudo como fato,
@@ -33,8 +33,9 @@ hipótese e lacuna não são a mesma coisa, e o arquivo precisa mostrar qual é 
 - **Contexto do negócio:** `_memoria/empresa.md` e `_memoria/estrategia.md` — pra
   preencher "MEU CONTEXTO" e "MINHA DOR" sem perguntar o que já está escrito.
 - **Tom:** `_memoria/preferencias.md` — pros resumos no chat.
-- **Ferramentas:** WebSearch/WebFetch (pesquisa pública), Playwright via Bash
-  (navegação e captura), Read em imagens (leitura dos prints), Grep/Glob.
+- **Ferramentas:** WebSearch/WebFetch (pesquisa pública), `agent-browser` via
+  Bash (navegação e captura — ferramenta padrão de navegador do CLAUDE.md),
+  Read em imagens (leitura dos prints), Grep/Glob.
 - **Outputs vão em:** `saidas/engenharia-reversa/<produto>/` com `prints/` e `docs/` dentro.
 
 ## Limite ético (não negociável)
@@ -94,26 +95,59 @@ Para cada etapa:
 
 ### Detalhes de execução que o prompt não cobre
 
-**Etapa 2 — captura com Playwright.** Seguir a receita de 8 passos do prompt
+**Etapa 2 — captura com agent-browser.** Seguir a receita de 8 passos do prompt
 (rede parada + 2s, rolar devagar até o fim, voltar ao topo, forçar visibilidade
-de elementos com opacity/display/visibility escondidos, medir altura, capturar a
-página inteira, conferir altura do arquivo contra a medida). Escrever o script em
-`saidas/engenharia-reversa/<produto>/capturar.mjs` e reaproveitar a instalação de
-Playwright que o `/carrossel` já usa. Viewport padrão 1440 de largura; se houver
-tempo, repetir as rotas principais em 390 (mobile). Nomes de arquivo sem espaço
-nem acento: `prints/NN-nome-da-rota.png`. O índice leva largura e altura
-medidas de cada print.
+de elementos com opacity/visibility escondidos, medir altura, capturar a página
+inteira, conferir altura do arquivo contra a medida) usando a sessão isolada de
+sempre:
 
-**Etapa 4 — tokens medidos.** Medir cor por amostra de pixel (script Node com
-`sharp` ou Python com Pillow sobre o print, ou `getComputedStyle` via Playwright)
-e anotar a origem da amostra. Nunca estimar pelo olho. Os tokens medidos podem
-alimentar `/criar-site` ou `/site-premium` **como referência de lógica**, nunca
-como paleta a copiar.
+```bash
+export AGENT_BROWSER_SESSION="$(agent-browser session id --scope worktree --prefix er-<produto>)"
+agent-browser set viewport 1440 900
+agent-browser open <rota>
+agent-browser wait --load load
+agent-browser wait 2000
+agent-browser scroll down 2000    # repetir até o fim, devagar
+agent-browser scroll up 999999    # volta ao topo, espera o layout assentar
+cat <<'EOF' | agent-browser eval --stdin
+document.querySelectorAll('*').forEach(el => {
+  const s = getComputedStyle(el);
+  if (parseFloat(s.opacity) < 1) el.style.opacity = '1';
+  if (s.visibility === 'hidden') el.style.visibility = 'visible';
+});
+document.documentElement.scrollHeight
+EOF
+agent-browser screenshot --full prints/NN-nome-da-rota.png
+```
 
-**Etapa 5 — Network.** Usar Playwright com `page.on('request'/'response')` e
-`context.cookies()` na conta de teste do usuário para registrar requisições,
-status, cookies (httpOnly, secure, sameSite, validade) e cabeçalhos de segurança.
-Nunca registrar senha ou token completo no arquivo: truncar (`eyJhbGci…[truncado]`).
+A altura impressa pelo `eval` é a medida de referência; conferir contra a
+altura real do arquivo salvo (ex. `identify prints/NN-*.png` ou script com
+`sharp`/Pillow) e refazer se não bater. Se houver tempo, repetir as rotas
+principais em 390 de largura (`agent-browser set viewport 390 844`, mobile).
+Nomes de arquivo sem espaço nem acento: `prints/NN-nome-da-rota.png`. O índice
+leva largura e altura medidas de cada print.
+
+**Etapa 4 — tokens medidos.** Medir cor direto do DOM vivo com
+`agent-browser get styles @eN` (mesma sessão da etapa 2, ainda na página) —
+sempre preferir isso a estimar. Só recorrer a amostra de pixel (script Node
+com `sharp` ou Python com Pillow sobre o print) quando o elemento já não
+estiver mais acessível na sessão. Sempre anotar a origem da amostra. Os
+tokens medidos podem alimentar `/criar-site` ou `/site-premium` **como
+referência de lógica**, nunca como paleta a copiar.
+
+**Etapa 5 — Network.** Usar agent-browser na conta de teste do usuário:
+
+```bash
+agent-browser network har start
+# fazer o login de verdade pela UI: snapshot -i, fill, click, wait
+agent-browser network har stop docs/login-<metodo>.har
+agent-browser cookies --json > docs/cookies-<metodo>.json
+```
+
+O HAR traz requisição, resposta, status e cabeçalhos de segurança de cada
+chamada do fluxo; `cookies --json` traz nome, validade, httpOnly, secure e
+sameSite de cada cookie. Nunca registrar senha ou token completo no arquivo
+`.md`: truncar (`eyJhbGci…[truncado]`) antes de citar qualquer valor.
 
 ### Passo 2 — Validação de cada etapa
 

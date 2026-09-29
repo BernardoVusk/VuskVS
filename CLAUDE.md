@@ -46,6 +46,44 @@ padrão de repetição for claro.
 
 ---
 
+## Ferramenta padrão de navegador
+
+Qualquer tarefa que precise abrir um site, navegar, clicar, preencher
+formulário, fazer login, extrair dado de uma página real ou tirar print de
+um site externo usa a CLI **agent-browser**
+(github.com/vercel-labs/agent-browser) — nunca Playwright/Puppeteer cru nem
+qualquer outra ferramenta de navegador pra esse tipo de tarefa.
+
+Antes do primeiro comando de cada tarefa nova, carregar o guia de uso:
+
+```bash
+agent-browser skills get core
+```
+
+E isolar a sessão em vez de usar a compartilhada:
+
+```bash
+export AGENT_BROWSER_SESSION="$(agent-browser session id --scope worktree --prefix vusk)"
+```
+
+Se `agent-browser --version` falhar, instalar antes de continuar:
+
+```bash
+npm i -g agent-browser && agent-browser install
+```
+
+Pra apps Electron (VS Code, Slack, Discord, Figma), automação no Slack, ou
+testes exploratórios, carregar a skill especializada correspondente
+(`agent-browser skills get electron|slack|dogfood`) em vez de forçar a
+skill `core` pra esses casos.
+
+Isso não muda o Playwright já usado em `/carrossel` e `/criar-site` pra
+renderizar HTML em PNG (é geração de imagem local, não navegação de site
+real). A captura de sites externos em `/engenharia-reversa` já foi migrada
+pra `agent-browser`.
+
+---
+
 ## Aprender com correções
 
 Quando o usuário corrigir algo, melhorar uma resposta ou dar uma

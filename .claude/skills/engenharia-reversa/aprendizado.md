@@ -14,4 +14,6 @@ ao fim de cada uma. Uma linha por aprendizado: `AAAA-MM-DD · produto · etapa �
 
 ## Das investigações
 
-(vazio)
+- 2026-09-28 · método · etapa 2 · captura migrada de Playwright pra `agent-browser` (CLI padrão de navegador do VuskVS, ver CLAUDE.md); mesma receita de 8 passos, comandos prontos no SKILL.md.
+- 2026-09-28 · método · etapa 4 · `agent-browser get styles @eN` mede cor direto do DOM vivo, sem precisar de amostra de pixel — só cair pra sharp/Pillow se o elemento já não estiver mais acessível na sessão.
+- 2026-09-28 · método · etapa 5 · `agent-browser network har start/stop` + `cookies --json` substituem `page.on('request')`/`context.cookies()` do Playwright pra auditar o login.

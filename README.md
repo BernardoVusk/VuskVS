@@ -4,8 +4,8 @@
 
 Você acaba de instalar o VuskVS. Em alguns minutos, sua empresa vai
 ter uma memória própria, uma identidade visual aplicada em tudo que
-o sistema gerar, e 17 skills prontas pra fazer marketing, SEO, ads, site, segurança
-e operação rodarem com você dirigindo.
+o sistema gerar, e 18 skills prontas pra fazer marketing, SEO, ads, site, produto,
+segurança e operação rodarem com você dirigindo.
 
 Bora voar.
 
@@ -75,6 +75,13 @@ e devolve relatório semanal com alertas e recomendações.
 **Produção** — ferramentas do dia a dia
 `/analisar-dados` lê CSV/XLSX/PDF e gera resumo executivo ·
 `/email-profissional` rascunha email a partir de contexto livre.
+
+**Produto** — estudar antes de construir
+`/engenharia-reversa` estuda um SaaS só pelo lado de fora em 8 etapas
+(preparo, escolha, coleta com prints medidos, funções, interface, acesso,
+mapa e reconstrução), marca tudo como fato, inferência, hipótese ou lacuna,
+e termina num blueprint próprio em Next.js + Supabase com gate de 12
+invariantes de segurança. Copia função e lógica, nunca marca nem código.
 
 **Segurança** — antes que vire prejuízo
 `/auditoria-seguranca` audita o código em 14 matrizes de ameaça (segredos

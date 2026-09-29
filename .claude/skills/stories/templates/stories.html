@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Stories · Exemplo de referência (adaptar por negócio)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@700;800;900&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --laranja:#f26f21; --preto:#1c1e20; --creme:#fbf9f4; --areia:#f5f1ea;
+    --grafite:#3f4448; --tinta3:#6b7075; --borda:#e4ddd0;
+    --suave:cubic-bezier(.22,1,.36,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#5a5f63;font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+
+  /* 05 · regras */
+  .regras{position:absolute;left:70px;right:70px;top:470px;z-index:6;}
+  .regra{display:flex;align-items:center;gap:40px;height:360px;border-top:1px solid rgba(251,249,244,.16);}
+  .regra:last-child{border-bottom:1px solid rgba(251,249,244,.16);}
+  .regra svg{width:230px;height:230px;flex:none;overflow:visible;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;}
+  .regra .n{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:22px;letter-spacing:.16em;color:var(--laranja);margin-bottom:14px;}
+  .regra .t{font-family:'Barlow Semi Condensed',sans-serif;font-weight:800;text-transform:uppercase;font-size:58px;line-height:.95;}
+  .balanca{transform-box:fill-box;transform-origin:0 50%;animation:balanca 2.2s ease-in-out infinite;}
+  @keyframes balanca{0%,100%{transform:skewY(0) scaleX(1)}50%{transform:skewY(8deg) scaleX(.86)}}
+  .onda{opacity:0;animation:onda 1.8s ease-out infinite;}
+  @keyframes onda{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+
+  /* 06 · foto */
+  .fotoR{position:absolute;left:0;right:0;bottom:0;height:1100px;z-index:2;clip-path:path('M 1080 0 C 1080 190, 420 136, 0 633 L 0 1100 L 1080 1100 Z');}
+  .fotoR img{width:100%;height:100%;object-fit:cover;object-position:46% 50%;display:block;animation:zoom 6s linear forwards;}
+  @keyframes zoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+  .fotoR::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(28,30,32,.75),rgba(28,30,32,0) 38%);}
+  .curva{position:absolute;left:0;bottom:0;width:1080px;height:1100px;z-index:3;overflow:visible;fill:none;}
+  .tag{position:absolute;left:70px;bottom:290px;z-index:6;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:21px;letter-spacing:.2em;text-transform:uppercase;color:var(--creme);}
+  .tag b{color:var(--laranja);font-weight:600;}
+
+  .slide{--bg:var(--areia);width:1080px;height:1920px;position:relative;overflow:hidden;background:var(--bg);color:var(--preto);margin:0 auto 40px;}
+  .slide.escuro{--bg:var(--preto);color:var(--creme);}
+
+  /* zonas seguras do Stories: topo (~250px) e base (~260px) sem texto */
+  .hd{position:absolute;top:235px;left:70px;right:70px;z-index:7;display:flex;justify-content:space-between;align-items:center;}
+  .handle{display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:19px;letter-spacing:.05em;text-transform:uppercase;}
+  .handle i{display:block;width:26px;height:24px;background:var(--preto);transform:skewX(-22deg);}
+  .escuro .handle i{background:var(--laranja);}
+  .count{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:19px;letter-spacing:.12em;}
+  .count small{font-size:inherit;opacity:.45;}
+
+  .tx{position:absolute;left:70px;right:70px;top:330px;z-index:6;}
+  .kick{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:20px;letter-spacing:.24em;text-transform:uppercase;color:var(--laranja);line-height:1.5;margin-bottom:24px;}
+  .disp{font-family:'Barlow Semi Condensed',sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:-.005em;}
+  .or{color:var(--laranja);}
+  h2{font-size:104px;line-height:.9;margin-left:-4px;}
+  h1{font-size:200px;line-height:.86;margin-left:-8px;}
+  p{margin-top:34px;font-size:34px;line-height:1.45;max-width:900px;color:var(--grafite);}
+  .escuro p{color:rgba(251,249,244,.82);}
+  p b{font-weight:600;}
+  .escuro p b{color:var(--creme);}
+
+  .forma{position:absolute;z-index:5;border:6px solid var(--laranja);transform:skewX(-37deg);transform-origin:0 100%;pointer-events:none;left:650px;top:-120px;width:305px;height:212px;}
+
+  .ilu{position:absolute;left:70px;width:940px;z-index:4;overflow:visible;
+       fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;}
+  .ilu text{font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:.14em;stroke:none;}
+  .dica{position:absolute;left:70px;right:70px;top:1380px;z-index:6;text-align:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:21px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinta3);}
+
+  /* ===== movimento (spec: identidade/design-guide.md, Ilustração line-art) ===== */
+  .d{stroke-dasharray:1 1;stroke-dashoffset:1;opacity:0;animation:desenha var(--dur,1.1s) var(--suave) var(--dl,0s) forwards;}
+  @keyframes desenha{0%{stroke-dashoffset:1;opacity:0}6%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+  .f,.fade{opacity:0;animation:fade .6s ease forwards;}
+  @keyframes fade{to{opacity:1}}
+  .marcha{animation:marcha 1.4s linear infinite;}
+  @keyframes marcha{to{stroke-dashoffset:-24}}
+  .pulso{opacity:0;transform-box:fill-box;transform-origin:center;animation:pulso 2.4s ease-out infinite;}
+  @keyframes pulso{0%{transform:scale(.3);opacity:.7}100%{transform:scale(1);opacity:0}}
+  .fluxo{stroke-dasharray:.1 1;stroke-dashoffset:0;opacity:0;animation:fluxo 1.8s linear infinite;}
+  @keyframes fluxo{0%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:-1.1;opacity:1}}
+  .zona{opacity:0;animation:fade .8s ease forwards,respira 2.4s ease-in-out infinite;}
+  @keyframes respira{0%,100%{opacity:1}50%{opacity:.4}}
+  .sobe{opacity:0;transform:translateY(28px);animation:sobe .9s var(--suave) var(--dl,0s) forwards;}
+  @keyframes sobe{to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- ========== 01 · GANCHO ========== -->
+<div class="slide escuro s1" data-dur="6">
+  <div class="forma"></div>
+  <header class="hd"><span class="handle"><i></i>@fxminasconstrutora</span><span class="count">01<small>/07</small></span></header>
+  <div class="tx">
+    <div class="kick sobe" style="--dl:.1s">Segurança na mina</div>
+    <h2 class="disp sobe" style="--dl:.2s">Um fora de estrada pode <span class="or">não ver</span> a caminhonete parada do lado dele.</h2>
+    <p class="sobe" style="--dl:.45s">Por quê? A resposta vem nos próximos stories.</p>
+  </div>
+  <svg class="ilu" id="cena1" data-k="1.6" viewBox="0 0 1000 560" style="top:1010px"></svg>
+</div>
+
+<!-- ========== 02 · QUIZ ========== -->
+<div class="slide s2" data-dur="5">
+  <div class="forma"></div>
+  <header class="hd"><span class="handle"><i></i>@fxminasconstrutora</span><span class="count">02<small>/07</small></span></header>
+  <div class="tx">
+    <div class="kick sobe" style="--dl:.1s">Teste rápido</div>
+    <h2 class="disp sobe" style="--dl:.2s">Qual lado é o <span class="or">mais perigoso</span> pra ficar perto?</h2>
+  </div>
+  <svg class="ilu" id="cena2" data-k="2.1" viewBox="0 0 1000 760" style="top:760px;left:190px;width:700px"></svg>
+  <div class="dica fade" style="animation-delay:2.2s;top:1330px">Responda no quiz 👇</div>
+</div>
+
+<!-- ========== 03 · RESPOSTA ========== -->
+<div class="slide escuro s3" data-dur="7">
+  <div class="forma"></div>
+  <header class="hd"><span class="handle"><i></i>@fxminasconstrutora</span><span class="count">03<small>/07</small></span></header>
+  <div class="tx">
+    <div class="kick sobe" style="--dl:.1s">Resposta</div>
+    <h1 class="disp or sobe" style="--dl:.2s">Lateral<br>direita.</h1>
+    <p class="sobe" style="--dl:.5s">O operador senta do lado esquerdo, lá no alto. <b>Do lado direito, uma área enorme some da visão dele.</b></p>
+  </div>
+  <svg class="ilu" id="cena3" data-k="1.8" viewBox="0 0 1000 760" style="top:1000px;left:150px;width:780px"></svg>
+</div>
+
+<!-- ========== 04 · TRANSIÇÃO ========== -->
+<div class="slide s4" data-dur="5">
+  <div class="forma"></div>
+  <header class="hd"><span class="handle"><i></i>@fxminasconstrutora</span><span class="count">04<small>/07</small></span></header>
+  <div class="tx">
+    <div class="kick sobe" style="--dl:.1s">Por isso, na mina</div>
+    <h2 class="disp sobe" style="--dl:.2s">Veículo leve segue <span class="or">3 regras</span> perto de um fora de estrada.</h2>
+  </div>
+  <svg class="ilu" id="cena4" data-k="1.3" viewBox="0 0 600 700" style="top:880px;left:250px;width:580px"></svg>
+</div>
+
+<!-- ========== 05 · AS 3 REGRAS ========== -->
+<div class="slide escuro s5" data-dur="9">
+  <div class="forma"></div>
+  <header class="hd"><span class="handle"><i></i>@fxminasconstrutora</span><span class="count">05<small>/07</small></span></header>
+  <div class="tx"><div class="kick sobe" style="--dl:.1s">As 3 regras</div></div>
+  <div class="regras">
+    <div class="regra"><svg id="ic1" data-k="1.9" viewBox="0 0 200 200"></svg><div class="sobe" style="--dl:.7s"><div class="n">01</div><div class="t">Bandeirola alta com luz no veículo leve.</div></div></div>
+    <div class="regra"><svg id="ic2" data-k="1.9" viewBox="0 0 200 200"></svg><div class="sobe" style="--dl:2.1s"><div class="n">02</div><div class="t">Chamar no rádio antes de chegar perto.</div></div></div>
+    <div class="regra"><svg id="ic3" data-k="1.9" viewBox="0 0 200 200"></svg><div class="sobe" style="--dl:3.5s"><div class="n">03</div><div class="t">Só passar depois de o operador <span class="or">te ver.</span></div></div></div>
+  </div>
+</div>
+
+<!-- ========== 06 · DDS (foto real) ========== -->
+<div class="slide escuro s6" data-dur="6">
+  <div class="forma"></div>
+  <header class="hd"><span class="handle"><i></i>@fxminasconstrutora</span><span class="count">06<small>/07</small></span></header>
+  <div class="tx">
+    <div class="kick sobe" style="--dl:.1s">Na nossa operação</div>
+    <h2 class="disp sobe" style="--dl:.2s">Essa conversa acontece no <span class="or">DDS</span>, antes de cada turno.</h2>
+  </div>
+  <div class="fotoR"><img src="fotos/dds-equipe.jpeg" alt="Foto de exemplo — trocar pela foto real do negócio (equipe, processo, obra/produto)"></div>
+  <svg class="curva" id="cena6" data-k="1" viewBox="0 0 1080 1100"></svg>
+  <div class="tag fade" style="animation-delay:1.4s"><b>DDS</b> · Diálogo Diário de Segurança</div>
+</div>
+
+<!-- ========== 07 · CTA ========== -->
+<div class="slide s7" data-dur="6">
+  <div class="forma"></div>
+  <header class="hd"><span class="handle"><i></i>@fxminasconstrutora</span><span class="count">07<small>/07</small></span></header>
+  <div class="tx">
+    <div class="kick sobe" style="--dl:.1s">Sua vez</div>
+    <h2 class="disp sobe" style="--dl:.2s">E você: qual regra de segurança já <span class="or">te salvou</span> numa obra?</h2>
+    <p class="sobe" style="--dl:.5s">Conta na caixa abaixo. As respostas voltam aqui nos stories.</p>
+  </div>
+  <svg class="ilu" id="cena7" data-k="1.5" viewBox="0 0 300 280" style="top:1020px;left:390px;width:300px"></svg>
+</div>
+
+<script>
+const q = new URLSearchParams(location.search).get('s');
+// ?s=N mostra só o story N (usado pelo render-video.js)
+if (q) document.querySelectorAll('.slide').forEach((el, i) => { if (i + 1 !== +q) el.style.display = 'none'; else el.style.margin = '0'; });
+
+const NS = 'http://www.w3.org/2000/svg';
+const LARANJA = '#f26f21';
+function el(tag, attrs, pai) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (pai) pai.appendChild(e);
+  return e;
+}
+const circ = (cx, cy, r) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0`;
+const elip = (cx, cy, rx, ry) => `M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${2 * rx} 0a${rx} ${ry} 0 1 0 ${-2 * rx} 0`;
+const rr = (x, y, w, h, r) => `M${x + r} ${y}H${x + w - r}Q${x + w} ${y} ${x + w} ${y + r}V${y + h - r}Q${x + w} ${y + h} ${x + w - r} ${y + h}H${x + r}Q${x} ${y + h} ${x} ${y + h - r}V${y + r}Q${x} ${y} ${x + r} ${y}Z`;
+
+let nMask = 0;
+function base(svg) {
+  const defs = el('defs', {}, svg);
+  const p = el('pattern', { id: svg.id + '-hach', width: 14, height: 14, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+  el('path', { d: 'M0 0V14', stroke: LARANJA, 'stroke-width': 2.5 }, p);
+  return defs;
+}
+// Traço que se desenha. Opções: dl (atraso), dur, op (opacidade), w (largura),
+// cor, fill (preenche por baixo, some o que está atrás), dash (tracejado revelado por máscara), marcha.
+function t(svg, d, o = {}) {
+  const { dl = 0, dur = 1.1, op = 1, cor = 'currentColor', fill, dash, marcha } = o;
+  const w = (o.w || 1.5) * (+svg.dataset.k || 1);
+  if (fill) el('path', { d, class: 'f', fill, stroke: 'none', style: `animation-delay:${(dl + dur * 0.3).toFixed(2)}s` }, svg);
+  if (dash) {
+    const id = svg.id + '-m' + nMask++;
+    const m = el('mask', { id, maskUnits: 'userSpaceOnUse', x: -200, y: -200, width: 1400, height: 1200 }, svg.querySelector('defs'));
+    el('path', { d, pathLength: 1, class: 'd', stroke: '#fff', 'stroke-width': w + 8, fill: 'none', style: `--dl:${dl}s;--dur:${dur}s` }, m);
+    return el('path', { d, mask: `url(#${id})`, 'stroke-dasharray': dash, 'stroke-opacity': op, 'stroke-width': w, stroke: cor, class: marcha ? 'marcha' : '' }, svg);
+  }
+  return el('path', { d, pathLength: 1, class: 'd', 'stroke-opacity': op, 'stroke-width': w, stroke: cor, style: `--dl:${dl}s;--dur:${dur}s` }, svg);
+}
+function pulso(svg, d, dl, o = {}) {
+  el('path', { d, class: 'pulso', stroke: o.cor || LARANJA, 'stroke-width': (o.w || 2) * (+svg.dataset.k || 1), style: `animation-delay:${dl}s` }, svg);
+}
+function rotulo(svg, x, y, txt, dl, o = {}) {
+  const e = el('text', { x, y, class: 'fade', fill: o.cor || LARANJA, 'font-size': o.size || 20, 'text-anchor': o.anchor || 'start', style: `animation-delay:${dl}s` }, svg);
+  e.textContent = txt;
+  return e;
+}
+
+/* ---------- Cena 1: fora de estrada de lado, caminhonete ao lado ---------- */
+(function () {
+  const s = document.getElementById('cena1');
+  base(s);
+  // bancadas da mina ao fundo
+  t(s, 'M0 250H150L200 200H470L520 150H1000', { dl: 0, dur: 1.4, op: 0.3 });
+  t(s, 'M0 330H60L100 290H300', { dl: 0.1, dur: 1.2, op: 0.18 });
+  t(s, 'M0 520H1000', { dl: 0.15, dur: 1.3 });
+  // caçamba (com capota sobre a cabine)
+  t(s, 'M120 382L80 200L112 120H790L806 152L642 158L632 330Z', { dl: 0.35, dur: 1.2, fill: 'var(--bg)' });
+  t(s, 'M112 150H636', { dl: 1.0, dur: 0.7, op: 0.5 });
+  [250, 380, 510].forEach((x, i) => t(s, `M${x} 150V${Math.round(330 + (630 - x) * 50 / 510)}`, { dl: 1.05 + i * 0.06, dur: 0.6, op: 0.5 }));
+  // chassi, cabine, frente
+  t(s, 'M310 420H610', { dl: 1.1, dur: 0.6, op: 0.7 });
+  t(s, 'M650 330V185H760L785 330Z', { dl: 1.0, dur: 0.9, fill: 'var(--bg)' });
+  t(s, 'M666 200H749L766 292H666Z', { dl: 1.3, dur: 0.6, op: 0.8 });
+  t(s, 'M632 330H872', { dl: 1.15, dur: 0.6 });
+  t(s, 'M788 330V422H880L872 330', { dl: 1.2, dur: 0.7, fill: 'var(--bg)' });
+  [806, 824, 842, 860].forEach((x, i) => t(s, `M${x} 345V408`, { dl: 1.4 + i * 0.04, dur: 0.4, op: 0.5 }));
+  t(s, 'M776 428H888', { dl: 1.35, dur: 0.5 });
+  t(s, 'M792 300H868M800 330V300M860 330V300', { dl: 1.45, dur: 0.6, op: 0.7 });
+  t(s, 'M592 364Q690 316 788 364', { dl: 1.2, dur: 0.7 });
+  // pneus
+  [[230, 0.5], [690, 0.6]].forEach(([cx, dl]) => {
+    t(s, circ(cx, 435, 85), { dl, dur: 1.1, fill: 'var(--bg)' });
+    t(s, circ(cx, 435, 52), { dl: dl + 0.35, dur: 0.7, op: 0.7 });
+    t(s, circ(cx, 435, 16), { dl: dl + 0.55, dur: 0.4 });
+  });
+  // caminhonete em primeiro plano, ao lado da roda dianteira
+  t(s, 'M536 490V446H676V402Q680 392 692 392H768L804 438H852Q862 440 862 452V482Q862 490 852 490Z', { dl: 1.9, dur: 1.0, w: 2, fill: 'var(--bg)' });
+  t(s, 'M694 404H764L788 436H694Z', { dl: 2.35, dur: 0.5, op: 0.8 });
+  [[590, 2.2], [806, 2.3]].forEach(([cx, dl]) => t(s, circ(cx, 494, 26), { dl, dur: 0.6, w: 2, fill: 'var(--bg)' }));
+  // olho do operador + linha de visão passando por cima
+  el('path', { d: circ(716, 238, 6), class: 'fade', fill: LARANJA, stroke: 'none', style: 'animation-delay:2.6s' }, s);
+  pulso(s, circ(716, 238, 26), 2.7);
+  t(s, 'M716 238L748 330', { dl: 2.8, dur: 0.6, w: 2.5, cor: LARANJA, dash: '4 8', marcha: true });
+  t(s, 'M736 318L760 342M760 318L736 342', { dl: 3.3, dur: 0.4, w: 3, cor: LARANJA });
+  t(s, 'M748 330L770 396', { dl: 3.4, dur: 0.5, w: 2, cor: LARANJA, op: 0.35, dash: '4 8' });
+  // a caminhonete fica abaixo da visão
+  pulso(s, elip(699, 520, 210, 34), 3.5, { w: 3 });
+  rotulo(s, 699, 555, 'FORA DA VISÃO', 3.5, { anchor: 'middle', size: 22 });
+})();
+
+/* ---------- Vista de cima do fora de estrada (cenas 2 e 3) ---------- */
+function vistaCima(s, dl0) {
+  const T = (d, o = {}) => t(s, d, { ...o, dl: dl0 + (o.dl || 0) });
+  // pneus
+  [[272, 108, 48, 108], [680, 108, 48, 108], [262, 478, 64, 152], [674, 478, 64, 152]].forEach(([x, y, w, h], i) =>
+    T(rr(x, y, w, h, 16), { dl: 0.2 + i * 0.08, dur: 0.9, fill: 'var(--bg)' }));
+  T('M294 478V630M706 478V630', { dl: 0.7, dur: 0.5, op: 0.5 });
+  // deck, caçamba, capota
+  T(rr(320, 92, 360, 110, 10), { dl: 0.1, dur: 1.0, fill: 'var(--bg)' });
+  T(rr(330, 196, 340, 446, 12), { dl: 0.3, dur: 1.2, fill: 'var(--bg)' });
+  [290, 380, 470, 560].forEach((y, i) => T(`M350 ${y}H650`, { dl: 0.9 + i * 0.06, dur: 0.6, op: 0.35 }));
+  T('M330 196V120H670V196', { dl: 1.0, dur: 0.8, op: 0.45, dash: '3 7' });
+  // cabine à esquerda, capô ao centro, passadiço à direita
+  T(rr(336, 108, 94, 78, 8), { dl: 0.6, dur: 0.8 });
+  T(rr(456, 100, 88, 88, 6), { dl: 0.7, dur: 0.8, op: 0.8 });
+  [476, 500, 524].forEach((x, i) => T(`M${x} 112V176`, { dl: 1.0 + i * 0.04, dur: 0.4, op: 0.5 }));
+  T('M566 112H664M566 180H664', { dl: 0.9, dur: 0.6, op: 0.6 });
+  T('M330 86H670', { dl: 0.8, dur: 0.6 });
+}
+
+/* ---------- Cena 2: quiz A, B, C ---------- */
+(function () {
+  const s = document.getElementById('cena2');
+  base(s);
+  vistaCima(s, 0);
+  [[500, 30, 'A', 'FRENTE', 1.4], [850, 380, 'B', 'LATERAL DIREITA', 1.55], [500, 720, 'C', 'TRASEIRA', 1.7]].forEach(([x, y, l, nome, dl]) => {
+    t(s, circ(x, y, 30), { dl, dur: 0.6, w: 2.5, cor: LARANJA, fill: 'var(--bg)' });
+    const e = rotulo(s, x, y + 9, l, dl + 0.3, { anchor: 'middle', size: 28 });
+    e.setAttribute('letter-spacing', '0');
+    pulso(s, circ(x, y, 64), dl + 0.5);
+    rotulo(s, x + (l === 'B' ? 0 : 50), y + (l === 'B' ? 70 : 8), nome, dl + 0.4, { anchor: l === 'B' ? 'middle' : 'start', size: 24, cor: 'var(--grafite)' });
+  });
+})();
+
+/* ---------- Cena 3: área cega na lateral direita ---------- */
+(function () {
+  const s = document.getElementById('cena3');
+  const hid = s.id + '-hach';
+  base(s);
+  // área cega entra primeiro, por trás do caminhão
+  el('path', { d: 'M700 70L990 10V750L700 670Z', class: 'zona', fill: `url(#${hid})`, 'fill-opacity': 0.55, stroke: 'none', style: 'animation-delay:1.9s,2.7s' }, s);
+  t(s, 'M700 70L990 10M700 670L990 750', { dl: 1.9, dur: 0.9, w: 2, cor: LARANJA, op: 0.8 });
+  vistaCima(s, 0);
+  // operador e o que ele enxerga
+  el('path', { d: circ(383, 147, 8), class: 'fade', fill: LARANJA, stroke: 'none', style: 'animation-delay:1.2s' }, s);
+  pulso(s, circ(383, 147, 30), 1.3);
+  [[383, 147, 40, -60], [383, 147, 240, -80], [383, 147, 10, 200]].forEach(([x1, y1, x2, y2], i) =>
+    t(s, `M${x1} ${y1}L${x2} ${y2}`, { dl: 1.3 + i * 0.1, dur: 0.8, op: 0.45, dash: '4 8', marcha: true }));
+  rotulo(s, 190, 110, 'OPERADOR', 1.6, { anchor: 'middle', size: 19, cor: 'currentColor' });
+  // caminhonete dentro da área cega
+  t(s, rr(806, 300, 88, 180, 18), { dl: 2.6, dur: 0.9, w: 2, fill: 'var(--bg)' });
+  t(s, 'M814 346H886M814 398H886', { dl: 3.0, dur: 0.5, op: 0.8 });
+  pulso(s, circ(850, 390, 150), 3.3, { w: 2.5 });
+  rotulo(s, 850, 560, 'ÁREA CEGA', 3.2, { anchor: 'middle', size: 24 });
+})();
+
+/* ---------- Cena 4: o "3" desenhado ---------- */
+(function () {
+  const s = document.getElementById('cena4');
+  base(s);
+  const TRES = 'M150 170Q170 70 300 70Q440 70 440 190Q440 320 280 330Q460 330 460 480Q460 630 300 630Q160 630 130 520';
+  const eco = t(s, TRES, { dl: 1.4, dur: 1.2, op: 0.25, dash: '4 8', marcha: true });
+  eco.setAttribute('transform', 'translate(26 26)');
+  t(s, 'M40 700H560', { dl: 0.2, dur: 1.2, op: 0.35 });
+  t(s, TRES, { dl: 0.4, dur: 1.6, w: 10, cor: LARANJA });
+  el('path', { d: circ(130, 520, 9), class: 'fade', fill: LARANJA, stroke: 'none', style: 'animation-delay:1.9s' }, s);
+  pulso(s, circ(130, 520, 44), 2.0, { w: 2 });
+})();
+
+/* ---------- Cena 5: ícones das 3 regras ---------- */
+(function () {
+  // 01 · bandeirola com luz
+  let s = document.getElementById('ic1'), b = 0.4;
+  base(s);
+  t(s, 'M20 170V142H90V120Q92 114 98 114H140L158 140H180Q186 141 186 148V164Q186 170 180 170Z', { dl: b, dur: 1.0, fill: 'var(--bg)' });
+  t(s, 'M100 122H136L150 138H100Z', { dl: b + 0.4, dur: 0.5, op: 0.7 });
+  [50, 158].forEach((cx, i) => t(s, circ(cx, 172, 13), { dl: b + 0.5 + i * 0.1, dur: 0.5, fill: 'var(--bg)' }));
+  t(s, 'M40 142V24', { dl: b + 0.6, dur: 0.6 });
+  const g = el('g', { class: 'balanca', style: `animation-delay:${b + 1.1}s` }, s);
+  el('path', { d: 'M40 26L92 38L40 52Z', class: 'fade', fill: LARANJA, stroke: 'none', style: `animation-delay:${b + 1.0}s` }, g);
+  el('path', { d: circ(40, 18, 6), class: 'fade', fill: LARANJA, stroke: 'none', style: `animation-delay:${b + 1.1}s` }, s);
+  pulso(s, circ(40, 18, 24), b + 1.2);
+
+  // 02 · rádio
+  s = document.getElementById('ic2'); b = 1.8;
+  base(s);
+  t(s, rr(62, 64, 64, 124, 12), { dl: b, dur: 1.0, fill: 'var(--bg)' });
+  t(s, 'M78 64V22', { dl: b + 0.4, dur: 0.5 });
+  t(s, rr(74, 80, 40, 30, 4), { dl: b + 0.5, dur: 0.6, op: 0.8 });
+  t(s, 'M78 132H110M78 150H110M78 168H110', { dl: b + 0.7, dur: 0.5, op: 0.5 });
+  [22, 38, 54].forEach((r, i) => el('path', {
+    d: `M${78 + r * 0.6} ${22 - r * 0.8}A${r} ${r} 0 0 1 ${78 + r * 0.6} ${22 + r * 0.8}`,
+    class: 'onda', stroke: LARANJA, 'stroke-width': 2.5 * 1.9, style: `animation-delay:${(b + 1.0 + i * 0.3).toFixed(1)}s`,
+  }, s));
+
+  // 03 · operador te vê
+  s = document.getElementById('ic3'); b = 3.2;
+  base(s);
+  t(s, 'M14 56Q50 24 86 56Q50 88 14 56Z', { dl: b, dur: 0.9 });
+  el('path', { d: circ(50, 56, 11), class: 'fade', fill: LARANJA, stroke: 'none', style: `animation-delay:${b + 0.5}s` }, s);
+  t(s, 'M88 74L136 118', { dl: b + 0.6, dur: 0.6, cor: LARANJA, dash: '4 8', marcha: true });
+  t(s, rr(128, 116, 44, 72, 12), { dl: b + 0.7, dur: 0.8, fill: 'var(--bg)' });
+  t(s, 'M134 138H166M134 160H166', { dl: b + 1.0, dur: 0.4, op: 0.7 });
+  t(s, 'M150 88L164 102L192 70', { dl: b + 1.3, dur: 0.5, w: 3, cor: LARANJA });
+  pulso(s, circ(150, 152, 60), b + 1.6);
+})();
+
+/* ---------- Cena 6: linha da curva da foto ---------- */
+(function () {
+  const s = document.getElementById('cena6');
+  base(s);
+  const CURVA = 'M1080 0C1080 190 420 136 0 633';
+  t(s, CURVA, { dl: 0.5, dur: 1.4, w: 6, cor: LARANJA });
+  el('path', { d: CURVA, pathLength: 1, class: 'fluxo', stroke: '#fbf9f4', 'stroke-width': 6, style: 'animation-delay:2s' }, s);
+})();
+
+/* ---------- Cena 7: capacete + seta pra caixa de perguntas ---------- */
+(function () {
+  const s = document.getElementById('cena7');
+  base(s);
+  t(s, 'M60 170Q60 70 150 64Q240 70 240 170', { dl: 0.6, dur: 1.1, fill: 'var(--bg)' });
+  t(s, 'M28 170H272Q284 170 284 181Q284 190 272 190H28Q16 190 16 181Q16 170 28 170Z', { dl: 0.9, dur: 0.9, fill: 'var(--bg)' });
+  t(s, 'M150 64V170', { dl: 1.2, dur: 0.6, op: 0.5 });
+  t(s, 'M112 74Q100 120 104 170M188 74Q200 120 196 170', { dl: 1.3, dur: 0.6, op: 0.4 });
+  t(s, 'M62 148H238', { dl: 1.5, dur: 0.6, w: 3, cor: LARANJA });
+  pulso(s, circ(150, 125, 130), 1.9);
+  t(s, 'M150 210V262', { dl: 1.8, dur: 0.5, w: 2.5, cor: LARANJA, dash: '4 8', marcha: true });
+  t(s, 'M136 252L150 268L164 252', { dl: 2.2, dur: 0.4, w: 2.5, cor: LARANJA });
+})();
+</script>
+</body>
+</html>

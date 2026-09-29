@@ -122,9 +122,9 @@ aparecem no sitemap. Rota fora do sitemap costuma ser a mais interessante.
 
 ━━━ PARTE B · A RECEITA DE CAPTURA (siga a ordem, não pule) ━━━
 
-Use navegador controlado por código (Playwright). NÃO use print de janela nem
-captura de topo: página com animação ou carregamento preguiçoso sai com FAIXA
-BRANCA no meio e com a altura errada.
+Use navegador controlado por código (`agent-browser`, ver CLAUDE.md). NÃO use
+print de janela nem captura de topo: página com animação ou carregamento
+preguiçoso sai com FAIXA BRANCA no meio e com a altura errada.
 
 Para CADA rota:
 1. abra a página
